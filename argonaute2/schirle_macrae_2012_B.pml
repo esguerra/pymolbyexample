@@ -21,6 +21,7 @@ load 4ola.pdb
 #    blocview -o 4ola.pdb
 #    mv blocview.r3d blocks.r3d
 load blocks.r3d
+bg white
 hide everything
 create protein, chain A
 create nucleic, chain B and (not resn U)
