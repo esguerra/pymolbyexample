@@ -61,7 +61,7 @@ source /home/apps/OLD/bin/apps.sh
 # Make block movie.
 catdcd -o frame1.pdb -otype pdb -s notip3.pdb -first 1 -last 1 notip3_recenter.dcd
 blocview -m -o frame1.pdb -r frame1.r3d
-for i in `seq 100 100 8000`;
+for i in `seq 50 50 8000`;
 do
     echo $i
     catdcd -o frame$i.pdb -otype pdb -s notip3.pdb -first $i -last $i notip3_recenter.dcd
@@ -73,7 +73,7 @@ bg white
 set orthoscopic, 1
 
 load frame1.r3d, blockmov
-for i in range(100,8000,100): cmd.load(\"frame%1d.r3d\"%i,\"blockmov\")
+for i in range(50,8000,50): cmd.load(\"frame%1d.r3d\"%i,\"blockmov\")
 turn z, 90
 turn y, 90
 set light, [0,0,-0.2]
@@ -83,7 +83,6 @@ set cgo_transparency, 0.3
 
 #set ray_direct_shade, 0.2
 #set ray_scatter, 0.4
-
 #set hash_max, 220
 #set depth_cue, 0
 #set ray_shadows, 0
@@ -91,8 +90,8 @@ set cgo_transparency, 0.3
 zoom
 set opaque_background, 0
 #viewport 800,600
-set ray_trace_frames, 1
-set cache_frames, 0
+#set ray_trace_frames, 1
+#set cache_frames, 0
 #mpng movie
 
 
