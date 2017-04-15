@@ -8,6 +8,17 @@
 # dynamics trajectory file and the rigid-body representation of nucleotides
 # using blocview from the x3dna suite of tools.
 #
+# Note that the coloring of the blocks is controlled in the par files in the
+# config folder of 3DNA.
+# The colors for chain are assigned according to the chain letter, in this
+# example the chains were named X and Y. Changing the chain names to what one
+# wants would take care of coloring.
+# This can't be done easily in pymol since the p-atom tube trace is a cgo
+# object just as the blocks are.
+#
+# Once the png images are created ffmpeg is used for stitching them together.
+# Unfortunately the quality of the original png files is lost, for some unknown
+# reason, the most noticeable effect is the loss of the fog effect.
 ################################################################################
 
 #set -x
@@ -30,7 +41,7 @@ exit 1
 
 (run)
 ################################################################################
-# RUN: Define correct path to programs and call catdcd, blocview and pymol
+# RUN: Define correct path to programs and call catdcd, blocview and pymol.
 # blocview depends on ruby, raster3d and molscript.
 ################################################################################
 module load gcc/6.2.0
