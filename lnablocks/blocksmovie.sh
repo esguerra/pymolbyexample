@@ -47,27 +47,27 @@ exit 1
 module load gcc/6.2.0
 module load ruby/2.3.4
 #module load pymol/1.8.6.0
-SOFT=/home/esguerra/software
-BIN=/home/esguerra/bin
-export PATH=$BIN/:$PATH
+#SOFT=/home/esguerra/software
+#BIN=/home/esguerra/bin
+#export PATH=$BIN/:$PATH
 
 # 3DNA 2.3
-export X3DNA='/home/apps/x3dna'
-export PATH='/home/apps/x3dna/bin':$PATH
+#export X3DNA='/home/apps/x3dna'
+#export PATH='/home/apps/x3dna/bin':$PATH
 # molscript 2.1.2
-export MOLSCRIPT=$SOFT/molscript-2.1.2/bin
-export PATH=$MOLSCRIPT:$PATH
+#export MOLSCRIPT=$SOFT/molscript-2.1.2/bin
+#export PATH=$MOLSCRIPT:$PATH
 # raster3d 3
-export RASTER3D=$SOFT/raster3d
-export PATH=$RASTER3D:$PATH
+#export RASTER3D=$SOFT/raster3d
+#export PATH=$RASTER3D:$PATH
 # pymol 1.6
-export PYMOL=/home/apps/pymol/1.6
-export PATH=$PYMOL:$PATH
+#export PYMOL=/home/apps/pymol/1.6
+#export PATH=$PYMOL:$PATH
 # libs
-export LIBSOLD=/home/apps/OLD/lib64
-export PATH=$LIBSOLD:$PATH
+#export LIBSOLD=/home/apps/OLD/lib64
+#export PATH=$LIBSOLD:$PATH
 
-source /home/apps/OLD/bin/apps.sh
+#source /home/apps/OLD/bin/apps.sh
 
 # Make block movie.
 catdcd -o frame1.pdb -otype pdb -s notip3.pdb -first 1 -last 1 notip3_recenter.dcd
@@ -88,9 +88,9 @@ for i in range(50,8000,50): cmd.load(\"frame%1d.r3d\"%i,\"blockmov\")
 turn z, 90
 turn y, 90
 set light, [0,0,-0.2]
-set ray_trace_mode, 1
-set antialias, 5
-set cgo_transparency, 0.3
+set ray_trace_mode, 3
+set antialias, 6
+#set cgo_transparency, 0.45
 
 #set ray_direct_shade, 0.2
 #set ray_scatter, 0.4
@@ -99,7 +99,7 @@ set cgo_transparency, 0.3
 #set ray_shadows, 0
 
 zoom
-set opaque_background, 0
+set opaque_background, 1
 #viewport 800,600
 #set ray_trace_frames, 1
 #set cache_frames, 0
@@ -116,8 +116,8 @@ python end
 
 " > blocksmovie.pml
 
-pymol -qc blocksmovie.pml
-#/Applications/Molviewers/macpymol1.4.app/Contents/MacOS/MacPyMOL -qc -k blocksmovie.pml
+#pymol -qc blocksmovie.pml
+/Applications/Molviewers/macpymol1.4.app/Contents/MacOS/MacPyMOL -qc -k blocksmovie.pml
 
 exit 0
 ;;
