@@ -1,0 +1,299 @@
+#!/usr/bin/env python
+
+# The following comand tells pymol to send feedback to the terminal
+# instead of the GUI.
+#_ feedback push
+
+# The next one tells pymol to disable all feedback.
+# Note that later feedback is turned back on with _ feedback pop
+#_ feedback disable,all,everything
+
+#IMPORT Psyco. In mi case it's installed in /Users/esguerra/.anaconda/python...
+import psico.fullinit
+from pymol import cmd
+
+# Some shortcuts
+alias clear, mstop; mclear; hide all
+alias nogui, set internal_gui=0
+alias gui, set internal_gui=1
+alias shiny, set spec_power=250; set spec_refl=1.5; set antialias=1; ray
+alias grab, os.system("open -a Grab")
+alias stop, quit
+alias exit, quit
+alias white, bg_color white; set depth_cue=0; set ray_trace_fog=0
+alias sscol, color red, ss s; color blue, ss h; color grey, ss l
+alias gpcrcol, spectrum count, rainbow, name CA; show cartoon; cmd.hide("((byres (min))&!(n. ca,c,o,h|(n. n&!r. pro)))")
+alias panel, set movie_panel, 1; movie.add_state_loop(1,0,start=1); set movie_panel_row_height, 20
+alias selprot, select onlyprot,  resn ala+arg+asn+asp+cys+gln+glu+gly+his+ile+leu+lys+met+phe+pro+ser+thr+trp+tyr+val; deselect
+
+alias naribbonize,\
+    hide; show cartoon; set cartoon_fancy_helices, 1; \
+    select patoms, name P; \
+    show cartoon, patoms; \
+    set cartoon_tube_radius, 0.2; \
+    color gray, patoms ; \
+    show spheres, name P; set sphere_scale, 0.3, name P; hide lines, name O1P+O2P ; \
+    select sugarbase, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P+C1\'+C2\'+C3\'+C4\'+C5\'+O5\'+O3\'+O4\' ; \
+    show cartoon, sugarbase; \
+    select gua, (resn G+GUA+DG); \
+    select ade, (resn A+ADE+DA); \
+    select thy, (resn T+THY+DT); \
+    select ura, (resn U+URA+DU); \
+    select cyt, (resn C+CYT+DC); \
+    set cartoon_ring_color, forest, gua; \
+    set cartoon_ring_color, red, ade; \
+    set cartoon_ring_color, blue, thy; \
+    set cartoon_ring_color, cyan, ura; \
+    set cartoon_ring_color, yellow, cyt; \
+    arrowbbone; \
+    set cartoon_ring_mode, 3; hide line, all; deselect
+#    set cartoon_ring_mode, 2; set cartoon_ring_color, gray80; hide line, all; deselect
+    #show sticks, for just phosphodie bbone
+
+alias proteinize,\
+    hide; cartoon arrow; show cartoon; set cartoon_rect_length, 0.7; \
+    set cartoon_rect_width, 0.1; set cartoon_sampling, 5; show spheres, name CA; \
+    set sphere_scale, 0.3, name CA; set cartoon_transparency, 0.3;\
+    util.rainbow
+
+alias proteinize2,\
+    show cartoon; set cartoon_cylindrical_helices, 1; \
+    set cartoon_sampling, 5; show spheres, name CA; \
+    set sphere_scale, 0.15, name CA; set cartoon_transparency, 0.3;\
+    util.rainbow; set cartoon_loop_radius, 0; show ribbon; set ray_trace_mode, 1;\
+    set ray_trace_gain, 0 
+
+# Make better labels here
+alias near5A,\
+    create near5A, (byres (sele expand 5)); preset.ligand_cartoon("near5A", _self=cmd) ;\
+    label not sele and name CA and near5A,"%s-%s" % (resn,resi) \
+    hide cartoon, near5A; show lines, near5A; zoom near5A;\
+    set label_bg_color, wheat; set label_connector_mode, 2; set label_connector, 1; \
+    set label_bg_outline, 1; set label_size, 14; set label_placement_offset, [0,2,0]; \
+    set stick_radius, 0.125; deselect
+#   select LIGAND, resn LIG; \
+#   select("LIG","(byres (sele expand 5))",enable=1
+
+alias wiregpcr,\
+    hide ; show ribbon, name CA; set ribbon_trace_atoms, 1; show spheres, name CA; \
+    set ribbon_width, 0.2; set sphere_scale, 0.35; set ribbon_sampling, 3
+
+alias wireprotnuc, \
+    hide ; show ribbon, name CA; set ribbon_trace_atoms, 1; show spheres, name CA; \
+    set ribbon_width, 1; set sphere_scale, 0.3; set ribbon_sampling, 3; \
+    spectrum count, rainbow, name CA; \
+    select patoms, name P; show cartoon, patoms; set cartoon_tube_radius, 0.2; color gray, patoms ; \
+    show spheres, name P; set sphere_scale, 0.3, name P; hide lines, name O1P+O2P ; \
+    select sugarbase, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P+C1\'+C2\'+C3\'+C4\'+C5\'+O5\'+O3\'+O4\' ; \
+    show cartoon, sugarbase; \
+    set cartoon_ring_mode, 2; set cartoon_ring_color, gray80; hide line, all; deselect
+
+alias cysteines, \
+    show sticks, resn CYS
+
+alias getnucleic, \
+    select nucleic, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P+O1P+O2P+O3P+P+C1\'+C2\'+C3\'+C4\'+C5\'+O2\'+O3\'+O4\'+O5\'+C1\'+C2\'+C3\'+C4\'+O2\'+O4\'
+    
+alias getprot, \
+    select protein, resn ARG+HIS+LYS+ASP+GLU+SER+THR+ASN+GLN+CYS+SEC+GLY+PRO+ALA+VAL+ILE+LEU+MET+PHE+TYR+TRP+LYN+ARN
+
+alias getbases, \
+    select nucleic, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P+C1\'+C2\'+C3\'+C4\'+C5\'+O5\'+O3\'+O1P+O2P+O3P+P+OP1+OP2+OP3
+
+alias getsugar, \
+    select sugars, name C1\'+C2\'+C3\'+C4\'+C5\'+O5\'+O3\'+O4\' 
+
+alias getnucleosides, \
+    select nucleosides, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P 
+
+alias getbbone, \
+    select bbone, name O1P+O2P+O3P+P+OP1+OP2+OP3
+
+alias arrowbbone, \
+    cartoon arrow; show cartoon, name P; set cartoon_color, orange; set cartoon_rect_length, 0.8; \
+    set cartoon_rect_width, 0.3
+
+alias patomtrace, \
+    select patoms, name P; show cartoon, patoms; set cartoon_tube_radius, 0.2; color gray, patoms ; \
+    show spheres, name P; set sphere_scale, 0.3, name P; hide lines, name O1P+O2P ; \
+    select sugarbase, name C2+C4+C5+C6+C8+N1+N2+N3+N4+N6+N7+N9+O2+O4+O6+N1P+C1\'+C2\'+C3\'+C4\'+C5\'+O5\'+O3\'+O4\' ; \
+    show cartoon, sugarbase; \
+    set cartoon_ring_mode, 2; set cartoon_ring_color, gray80; hide line, all; deselect
+
+alias labelresidues, label (name CA+C1*+C1\' and byres(all)), "%s-%s" % (resn,resi)
+
+alias labeling, set label_size, 20; set label_position, [0, 1.2, 0]; label all, "%s = %s" % (name, ID)
+
+alias indentlabels, set label_position, [0, 1.2, 0]
+
+# === now create a pseudo-fcalc map (a 3D volumetric scalar field) ===
+# set the B-factors nice and high for smoothness
+alias blobit, \
+set use_shaders, 0 ;\
+alter all, b=100 ;\
+set gaussian_resolution, 5 ;\
+map_new selectmap, gaussian, 3,  sele, 5 ;\
+isosurface selectsurf, selectmap, 1.2 ;\
+set transparency, 0.3, selectsurf ;\
+#isolevel selectsurf, 8 ;\
+color grey, selectsurf ;\
+set transparency, 0.5, selectsurf ;\
+set transparency_mode, 3
+
+
+# Define aliases for mapping in [x,y,z] rotations and translations into a single Powermate
+# dial.  Toggling between the three is possible if you then assign these to special keys.
+#
+# Functions for x,y,z rotations and translations using Powermate dial
+# Program F1 and F2 to Rotate Right and Rotate Left
+# Program F3 and F4 to Click & Rotate Right and Click & Rotate Left
+# Program F5 to  Click  (to toggle between dialsets)
+#
+# dialset = 2
+
+def dialx(): \
+    global dialset \
+    dialset = 1 \
+    cmd.set_key ('F1', cmd.turn,('x',-2.0)) \
+    cmd.set_key ('F2', cmd.turn,('x',2.0)) \
+    cmd.set_key ('F3', cmd.move,('x',-0.5)) \
+    cmd.set_key ('F4', cmd.move,('x',0.5)) \
+    print("dialset ", dialset, " [ X ]\n") \
+    return dialset
+
+def dialy(): \
+    global dialset \
+    dialset = 2 \
+    cmd.set_key ('F1', cmd.turn,('y',-2.0)) \
+    cmd.set_key ('F2', cmd.turn,('y',2.0)) \
+    cmd.set_key ('F3', cmd.move,('y',-0.5)) \
+    cmd.set_key ('F4', cmd.move,('y',0.5)) \
+    print("dialset ", dialset, " [ Y ]\n") \
+    return dialset
+
+def dialz(): \
+    global dialset \
+    dialset = 3 \
+    cmd.set_key ('F1', cmd.turn,('z',-2.0)) \
+    cmd.set_key ('F2', cmd.turn,('z',2.0)) \
+    cmd.set_key ('F3', cmd.move,('z',-0.5)) \
+    cmd.set_key ('F4', cmd.move,('z',0.5)) \
+    print("dialset ", dialset, " [ Z ]\n") \
+    return dialset
+
+def toggle_dial(): \
+    if dialset == 1 : \
+        print("Changing to y") \
+        dialy() \
+    elif dialset == 2 : \
+        print("Changing to z") \
+        dialz() \
+    elif dialset == 3 : \
+        print("Changing to x") \
+        dialx() \
+    else: print("Dial assignment isn't working")
+
+
+cmd.set_key ('F5', toggle_dial)
+
+# Start default dial state to rotate y  (arbitrary choice)
+dialy()
+
+# END COMMANDS
+_ feedback pop
+
+print("PowerMate Dial interface has been enabled") 
+
+
+# use white background
+#set bg_rgb, 1 1 1
+bg white
+
+# color according to CPK
+set_color carbon, [0.0 , 0.0 , 0.0]
+set_color nitrogen, [0.0 , 0.0 , 1.0]
+set_color oxygen, [1.0 , 0.0 , 0.0]
+set_color phosphorus, [1.0 , 1.0 , 0.0]
+
+# set orthoscopic, rather than perspective as the default
+set orthoscopic, 1
+
+# At some point, who know who had the great idea of making hydrogens to be
+# displayed with fugly much smaller sticks. The following makes it normal.
+set stick_h_scale, 1
+
+# This makes it so that the background is white.
+set opaque_background, 1
+
+# Default sticks are too fat.
+set stick_radius, 0.125
+
+# Change default to be spectrum colored cartoons
+#spectrum count, rainbow, polymer
+set cartoon_cylindrical_helices, 0
+set cartoon_fancy_helices, 1
+
+#python
+#from pymol import preset
+#preset.ligand_cartoon('all')
+#python end
+# from pymol import cmd, preset
+# load_orig = cmd.load
+# def load_new(*args, **kwargs):
+#     load_orig(*args, **kwargs)
+#     preset.ligand_cartoon('all')
+# cmd.load = load_new
+# python end
+
+
+# set label option
+set label_color, blue
+#set label_size, 22
+
+# set prefered ray trace options
+#set ray_trace_mode, 3
+#set ray_trace_fog,0
+#set ray_shadows,0
+#set ray_trace_gain, 0
+#set antialias, 2
+
+# set size of graphics window
+#viewport 800, 600
+#viewport 1100, 900
+#viewport 1280,1024
+
+#set hash_max, 1000
+
+# turn off auto zoom
+#set auto_zoom, 0
+
+## Uncomment if you wanna set
+## spheres by default
+# unset auto_show_lines
+# unset auto_show_nonbonded
+# set auto_show_spheres
+# if your machine supports openGL shaders
+# uncomment the following
+# set sphere_mode, 5
+
+#set async_builds
+#set use_display_lists
+
+#show spheres
+set sphere_scale, 0.15
+
+print("Finished reading ~/.pymolrc") 
+
+# END COMMANDS
+#_ feedback pop
+
+
+#import sys, os
+#sys.path.append('/Users/esguerra/software/pymolscripts/')
+
+#import sys, os
+#pymol_git = os.path.realpath('/Users/esguerra/software/pymolscripts')
+
+#os.environ['PYMOL_GIT_MOD'] = os.path.join(pymol_git,'modules')
+#sys.path.append(pymol_git)
+#sys.path.append(os.environ['PYMOL_GIT_MOD'])
