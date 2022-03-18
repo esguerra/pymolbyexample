@@ -88,9 +88,9 @@ print cmd.count_states()
 mstop
 
 #Make images for movie
-#viewport 1024,768
-viewport 800, 800
-set ray_trace_frames=0
+viewport 1024,768
+#viewport 800, 800
+set ray_trace_frames=1
 set cache_frame=0
 mpng mov
 

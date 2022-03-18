@@ -14,7 +14,8 @@
 reinitialize
 fetch 1VPR, async=0
 
-mset 1x280	#define video with 280 frames
+# define video with 280 frames
+mset 1x280	
 
 #////////////////////////////////////////////////////////////////////
 #styling the view with  scenes:
@@ -55,7 +56,7 @@ set_view (\
    129.288208008,  228.071868896,  -20.000000000 )
 mview store
 
-#do zooming here with the set_view
+#do zooming here with set_view
 frame 120
 set_view (\
      0.841132998,   -0.129050016,    0.525204480,\
