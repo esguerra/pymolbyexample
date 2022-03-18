@@ -1,6 +1,10 @@
 #!/bin/bash
 
-#/Applications/Molviewers/macpymol1.4.app/Contents/MacOS/MacPyMOL schirle_macrae_2012.pml
+# To make the movie one will have to generate PNG snapshots first using pymol.
+# This can be done with, for example:
+#     /Applications/Molviewers/macpymol1.4.app/Contents/MacOS/MacPyMOL schirle_macrae_2012.pml
+# Or, it can also be done without using pymol's GUI with:
+#     pymol -qc -k schirle_macrae_2012.pml
 
 for i in $(seq -w 1 1 60); do
     array+=("mov00$i.png ")

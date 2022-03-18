@@ -7,5 +7,5 @@
 
 source /shared/work/NBD_Utilities/miniconda3/etc/profile.d/conda.sh
 conda activate /shared/work/NBD_Utilities/pymol
-pymol -qc schirle_macrae_2012.pml
+pymol -qc -k schirle_macrae_2012.pml
 ./makemovie.sh
